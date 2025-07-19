@@ -16,7 +16,7 @@ describe("Voting Contract Tests", function () {
     Voting = await ethers.getContractFactory("Voting");
     [owner, addr1, addr2, addr3] = await ethers.getSigners();
     votingContract = await Voting.deploy(candidates);
-    await votingContract.deployed();
+    await votingContract.waitForDeployment();
   });
 
   describe("Deployment", function () {
@@ -178,17 +178,17 @@ describe("Voting Contract Tests", function () {
       const receipt = await tx.wait();
 
       // Log gas used - this is useful for optimization
-      console.log(Gas used for voting: ${receipt.gasUsed.toString()});
+      console.log(`Gas used for voting: ${receipt.gasUsed.toString()}`);
 
       // Ensure gas usage is reasonable (this is a very high upper bound)
-      expect(receipt.gasUsed.toNumber()).to.be.lessThan(200000);
+      expect(Number(receipt.gasUsed)).to.be.lessThan(200000);
     });
 
     it("Should handle candidates with special characters", async function () {
       // Deploy contract with special character candidates
       const specialCandidates = ["John O'Connor", "Maria-José", "Candidate #1"];
       const specialContract = await Voting.deploy(specialCandidates);
-      await specialContract.deployed();
+      await specialContract.waitForDeployment();
 
       // Vote for a candidate with special characters
       await specialContract.connect(addr1).vote("John O'Connor");

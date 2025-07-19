@@ -59,4 +59,8 @@ contract Voting {
         }
         return false;
     }
+
+    function addCandidate(string memory name) public onlyOwner {
+        candidateList.push(name);
+    }
 }

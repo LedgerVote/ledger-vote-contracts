@@ -24,7 +24,7 @@ describe("Voting Integration Tests", function () {
 
     // Deploy the contract
     votingContract = await Voting.deploy(candidates);
-    await votingContract.deployed();
+    await votingContract.waitForDeployment();
 
     console.log(`Contract deployed to: ${votingContract.address}`);
     console.log(`Testing with ${voters.length} voter accounts`);
@@ -35,9 +35,7 @@ describe("Voting Integration Tests", function () {
       // Record initial state
       const initialVotes = {};
       for (const candidate of candidates) {
-        initialVotes[candidate] = (
-          await votingContract.getVotes(candidate)
-        ).toNumber();
+        initialVotes[candidate] = await votingContract.getVotes(candidate);
       }
 
       // Cast votes from multiple accounts

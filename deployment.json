@@ -2,7 +2,7 @@
   "contractAddress": "0x5FbDB2315678afecb367f032d93F642f64180aa3",
   "network": "localhost",
   "chainId": 31337,
-  "deployedAt": "2025-07-17T12:43:55.527Z",
+  "deployedAt": "2025-07-19T06:09:17.395Z",
   "candidates": [
     "Alice",
     "Bob",
