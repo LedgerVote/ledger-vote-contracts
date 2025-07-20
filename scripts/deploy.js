@@ -7,9 +7,25 @@ async function main() {
 
   // Deploy the contract with initial candidates
   const Voting = await ethers.getContractFactory("Voting");
-  console.log("📝 Deploying with candidates: Alice, Bob, Charlie");
 
-  const contract = await Voting.deploy(["Alice", "Bob", "Charlie"]);
+  // Get candidates from command line args, environment variable, or use defaults
+  const args = process.argv.slice(2);
+  let candidates;
+
+  if (args.length > 0) {
+    candidates = args;
+    console.log("📝 Using candidates from command line arguments");
+  } else if (process.env.CANDIDATES) {
+    candidates = process.env.CANDIDATES.split(",").map((name) => name.trim());
+    console.log("📝 Using candidates from environment variable");
+  } else {
+    candidates = ["Alice", "Bob", "Charlie", "David", "Emma", "Frank"];
+    console.log("📝 Using default candidates");
+  }
+
+  console.log("📝 Deploying with candidates:", candidates.join(", "));
+
+  const contract = await Voting.deploy(candidates);
   await contract.waitForDeployment();
 
   const contractAddress = contract.target;
@@ -21,7 +37,7 @@ async function main() {
     network: "localhost",
     chainId: 31337,
     deployedAt: new Date().toISOString(),
-    candidates: ["Alice", "Bob", "Charlie"],
+    candidates: candidates,
   };
 
   const deploymentPath = path.join(__dirname, "../deployment.json");
@@ -30,8 +46,8 @@ async function main() {
 
   // Verify contract is working
   console.log("🔍 Verifying contract...");
-  const candidates = await contract.getAllCandidates();
-  console.log("📋 Contract candidates:", candidates);
+  const contractCandidates = await contract.getAllCandidates();
+  console.log("📋 Contract candidates:", contractCandidates);
 
   console.log("\n🎉 Deployment complete!");
   console.log("🔗 Contract Address:", contractAddress);
